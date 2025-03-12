@@ -57,7 +57,7 @@ public class StudentDashboardActivity extends AppCompatActivity {
 
         // Assignment button click event
         btnAssignment.setOnClickListener(v -> {
-            Intent intent = new Intent(StudentDashboardActivity.this, AssignmentActivity.class);
+            Intent intent = new Intent(StudentDashboardActivity.this, ViewAssignmentsActivity.class);
             startActivity(intent);
         });
 

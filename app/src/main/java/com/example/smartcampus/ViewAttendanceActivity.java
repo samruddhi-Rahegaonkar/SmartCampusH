@@ -34,27 +34,33 @@ public class ViewAttendanceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_attendance);
 
+        // Initialize UI elements
         spinnerYear = findViewById(R.id.spinnerYear);
         btnPickDate = findViewById(R.id.btnPickDate);
         tvSelectedDate = findViewById(R.id.tvSelectedDate);
         recyclerViewAttendance = findViewById(R.id.recyclerViewAttendance);
         db = FirebaseFirestore.getInstance();
 
+        // Setup RecyclerView
         recyclerViewAttendance.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewAttendance.setHasFixedSize(true);
         attendanceAdapter = new AttendanceAdapter(new ArrayList<>());
         recyclerViewAttendance.setAdapter(attendanceAdapter);
 
+        // Setup Spinner (Dropdown)
         ArrayAdapter<String> yearAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
                 Arrays.asList("1st year", "2nd year", "3rd year", "Final year"));
         yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerYear.setAdapter(yearAdapter);
 
+        // Date picker button
         btnPickDate.setOnClickListener(v -> showDatePicker());
     }
 
     private void showDatePicker() {
         Calendar calendar = Calendar.getInstance();
         new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+            // Ensure date formatting (YYYY-MM-DD)
             selectedDate = year + "-" + (month + 1) + "-" + dayOfMonth;
             tvSelectedDate.setText(selectedDate);
             loadAttendance();
@@ -74,17 +80,23 @@ public class ViewAttendanceActivity extends AppCompatActivity {
                 .document(selectedDate).collection("studentList")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.isEmpty()) {
+                        Toast.makeText(this, "No attendance records found!", Toast.LENGTH_SHORT).show();
+                        attendanceAdapter.setAttendanceList(new ArrayList<>());
+                        return;
+                    }
+
                     List<Attendance> attendanceList = new ArrayList<>();
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
                         String studentName = doc.getId();
                         String status = doc.getString("status");
-                        attendanceList.add(new Attendance(studentName, status));
+                        attendanceList.add(new Attendance(studentName, status != null ? status : "N/A"));
                     }
                     attendanceAdapter.setAttendanceList(attendanceList);
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Failed to load attendance: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e("Firestore", "Error loading attendance", e);
+                    Toast.makeText(this, "Failed to load attendance!", Toast.LENGTH_SHORT).show();
+                    Log.e("Firestore", "Error loading attendance: " + e.getMessage(), e);
                 });
     }
 }

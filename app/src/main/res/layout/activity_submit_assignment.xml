@@ -5,52 +5,103 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
-    android:gravity="center"
     android:orientation="vertical"
+    android:background="@android:color/white"
     tools:context=".SubmitAssignmentActivity">
 
-    <!-- CardView for File Selection -->
-    <androidx.cardview.widget.CardView
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="5dp"
-        android:layout_marginBottom="20dp"
-        app:cardCornerRadius="10dp">
+        android:background="@color/black"
+        android:elevation="4dp"
+        android:paddingVertical="16dp"
+        android:paddingHorizontal="20dp"
+        app:titleTextColor="@android:color/white"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="15dp"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/logoImageView"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/smartcampus"
+                android:contentDescription="Logo"
+                android:layout_marginEnd="12dp"/>
 
             <TextView
-                android:id="@+id/fileNameTextView"
+                android:id="@+id/toolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No file selected"
-                android:textSize="16sp"
-                android:textColor="@android:color/darker_gray"/>
-
-            <Button
-                android:id="@+id/selectFileButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Choose File"
-                android:backgroundTint="@color/black"
-                android:layout_marginTop="10dp"/>
+                android:text="Submit Assignment"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </androidx.appcompat.widget.Toolbar>
 
-    <!-- Submit Button -->
-    <Button
-        android:id="@+id/submitButton"
+    <!-- Main content -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Submit Assignment"
-        android:backgroundTint="@color/black"
-        android:textColor="@android:color/white"
-        android:padding="10dp"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center">
+
+        <!-- Link Submission Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="6dp"
+            android:layout_marginBottom="24dp"
+            app:cardCornerRadius="12dp"
+            app:strokeColor="@android:color/darker_gray"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="18dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Enter Assignment Link (Google Drive, GitHub, etc.):"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:paddingBottom="8dp"/>
+
+                <EditText
+                    android:id="@+id/linkEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Paste link here"
+                    android:inputType="textUri"
+                    android:padding="12dp"
+                    android:background="@android:color/white"
+                    android:layout_marginBottom="12dp"
+                    android:elevation="2dp"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Submit Button -->
+        <Button
+            android:id="@+id/submitButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submit Assignment"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/black"
+            android:paddingVertical="12dp" />
+
+    </LinearLayout>
 
 </LinearLayout>

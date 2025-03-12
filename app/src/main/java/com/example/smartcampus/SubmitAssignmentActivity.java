@@ -1,24 +1,26 @@
 package com.example.smartcampus;
 
-import android.content.Intent;
-import android.net.Uri;
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.contract.ActivityResultContracts;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SubmitAssignmentActivity extends AppCompatActivity {
 
-    private static final int PICK_FILE_REQUEST = 1;
-    private Uri fileUri;
-    private TextView fileNameTextView;
-    private Button selectFileButton;
+    private EditText linkEditText;
     private Button submitButton;
-    private StudentAssignmentUploader uploader;
+    private FirebaseFirestore db;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,44 +28,51 @@ public class SubmitAssignmentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_submit_assignment);
 
         // Initialize views
-        fileNameTextView = findViewById(R.id.fileNameTextView);
-        selectFileButton = findViewById(R.id.selectFileButton);
+        linkEditText = findViewById(R.id.linkEditText);
         submitButton = findViewById(R.id.submitButton);
 
-        // Initialize uploader class for assignment upload
-        uploader = new StudentAssignmentUploader(this);
+        // Initialize Firebase Firestore
+        db = FirebaseFirestore.getInstance();
 
-        // Set up file picker button click listener
-        selectFileButton.setOnClickListener(v -> {
-            openFilePicker();
-        });
+        // Progress Dialog
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Submitting assignment...");
+        progressDialog.setCancelable(false);
 
-        // Set up submit button click listener
+        // Submit link
         submitButton.setOnClickListener(v -> {
-            if (fileUri != null) {
-                String assignmentId = "assignmentId"; // Replace with dynamic assignment ID
-                String studentId = "studentId"; // Replace with actual student ID
-                uploader.submitAssignment(assignmentId, studentId, fileUri);
+            String link = linkEditText.getText().toString().trim();
+            if (isValidLink(link)) {
+                submitLinkToFirestore(link);
             } else {
-                Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please enter a valid link!", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    // Open file picker to select a file
-    private void openFilePicker() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("application/pdf"); // Change this if you need other file types
-        startActivityForResult(intent, PICK_FILE_REQUEST);
+    // Validate link (basic check for HTTP/HTTPS URLs)
+    private boolean isValidLink(String link) {
+        return !TextUtils.isEmpty(link) && (link.startsWith("http://") || link.startsWith("https://"));
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_FILE_REQUEST && resultCode == RESULT_OK && data != null) {
-            fileUri = data.getData();
-            String fileName = fileUri != null ? fileUri.getLastPathSegment() : "No file selected";
-            fileNameTextView.setText(fileName);
-        }
+    // Submit link to Firestore
+    private void submitLinkToFirestore(String link) {
+        progressDialog.show();
+
+        Map<String, Object> submissionData = new HashMap<>();
+        submissionData.put("link", link);
+        submissionData.put("timestamp", System.currentTimeMillis());
+
+        db.collection("submittedAssignments")
+                .add(submissionData)
+                .addOnSuccessListener(documentReference -> {
+                    progressDialog.dismiss();
+                    Toast.makeText(this, "Assignment link submitted successfully!", Toast.LENGTH_SHORT).show();
+                    linkEditText.setText(""); // Clear input field
+                })
+                .addOnFailureListener(e -> {
+                    progressDialog.dismiss();
+                    Toast.makeText(this, "Failed to submit assignment: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 }

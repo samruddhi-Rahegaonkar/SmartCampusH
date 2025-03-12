@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:background="@android:color/black"
         android:padding="16dp"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:layout_marginBottom="24dp">
 
         <ImageView
             android:layout_width="48dp"
@@ -44,18 +45,6 @@
                 android:textColor="@android:color/white" />
         </LinearLayout>
     </LinearLayout>
-
-    <!-- Welcome Text -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Welcome, Admin"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="24dp"
-        android:textColor="@android:color/black" />
 
     <!-- Main Content - Action Buttons -->
     <LinearLayout
@@ -156,7 +145,7 @@
             android:orientation="horizontal"
             android:background="@drawable/rounded_button"
             android:padding="20dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="10dp"
             android:gravity="center_vertical"
             android:clickable="true"
             android:focusable="true">
@@ -173,6 +162,57 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Create Event"
+                android:textSize="18sp"
+                android:textColor="@android:color/black" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/btncreateAssignment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/rounded_button"
+            android:padding="20dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/event"
+                android:layout_marginEnd="20dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create Assignment"
+                android:textSize="18sp"
+                android:textColor="@android:color/black" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/btncreateNotices"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/rounded_button"
+            android:padding="20dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginBottom="18dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/event"
+                android:layout_marginEnd="20dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create Notices"
                 android:textSize="18sp"
                 android:textColor="@android:color/black" />
         </LinearLayout>

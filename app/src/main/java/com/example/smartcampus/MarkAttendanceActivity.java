@@ -126,8 +126,14 @@ public class MarkAttendanceActivity extends AppCompatActivity {
     private void showDatePicker() {
         Calendar calendar = Calendar.getInstance();
         new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
-            selectedDate = year + "-" + (month + 1) + "-" + dayOfMonth;
-            tvSelectedDate.setText(selectedDate);
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+            // Ensure single-digit months and days don't have leading zeros
+            String formattedDate = year + "-" + (month + 1) + "-" + dayOfMonth;
+            selectedDate = formattedDate;
+            tvSelectedDate.setText(formattedDate);
+        },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
+
 }
